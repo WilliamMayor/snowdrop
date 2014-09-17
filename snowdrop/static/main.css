@@ -1,0 +1,34 @@
+html, body {
+    width: 100%;
+    padding: 0;
+}
+header, .main {
+    width: 1000px;
+    margin: auto;
+}
+header img {
+    width: 200px;
+    vertical-align: top;
+}
+header div {
+    display: inline-block;
+}
+.main ul {
+    list-style-type: none;
+}
+.main ul li {
+    margin: 5px 0;
+}
+.main ul li span {
+    display: inline-block;
+    width: 200px;
+    text-align: right;
+    margin-right: 10px;
+}
+.main table {
+    width: 100%;
+}
+.main table .progress_bar {
+    background-color: blue;
+    height: 2px;
+}

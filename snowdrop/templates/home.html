@@ -1,0 +1,40 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>snowdrop.local</title>
+  <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+    <header>
+        <img src="/static/images/snowdrop.jpg" />
+        <div>
+            <h1>snowdrop</h1>
+            <p>snowdrop automatically backs up local network drives to Amazon Glacier. It also provides a report on the archive.</p>
+        </div>
+    </header>
+    <div class="main">
+        <ul>
+            <li><span>Earliest backup:</span> {{ earliest }}</li>
+            <li><span>Latest backup:</span> {{ latest }}</li>
+            <li><span>Total vault size:</span> {{ vault_size }}GB</li>
+            <li><span>Monthly cost:</span> ${{ monthly_cost }}</li>
+        </ul>
+        <table>
+            <tr><th></th><th>Date</th><th>Name</th><th>Size</th><th>Cost Per Month</th></tr>
+            {% for archive in vault %}
+            <tr data-aid="{{ archive.id }}">
+                <td><input type="checkbox" /></td>
+                <td>{{ archive.date }}</td>
+                <td>{{ archive.name }}</td>
+                <td>{{ archive.size }}GB</td>
+                <td>${{ archive.cost }}</td>
+            </tr>
+            {% if archive.upload_progress != 100 %}
+            <tr><td colspan="5"><div class="progress_bar" style="width: {{ archive.upload_progress }}%">&nbsp;</div></td></tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

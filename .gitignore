@@ -52,3 +52,11 @@ docs/_build/
 
 # PyBuilder
 target/
+
+snowdrop/config/local.py
+
+glacier.db
+
+venv
+
+envelope.py
