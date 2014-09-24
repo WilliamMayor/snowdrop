@@ -14,13 +14,23 @@ LAYER2 = Layer2(
     region_name=app.config['AWS_REGION_NAME'])
 
 
-def upload(path=None, name=None):
+def size(path):
+    if os.path.isdir(path):
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(start_path):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                total_size += os.path.getsize(fp)
+        return total_size
+    return os.path.getsize(path)
+
+
+def upload(path):
     with app.app_context():
-        if name is None:
-            name = os.path.basename(path)
+        name = os.path.basename(path)
         a = Archive()
         a.name = '%s - %s' % (datetime.date.today(), name)
-        a.size = os.stat(path).st_size
+        a.size = size(path)
         a.upload_progress = 0
         db.session.add(a)
         db.session.commit()
@@ -29,10 +39,10 @@ def upload(path=None, name=None):
         writer = v.create_archive_writer(
             part_size=app.config['UPLOAD_CHUNK_SIZE'], description=a.name)
         uploaded_size = 0
-        if path is not None:
-            fd = open(path, 'rb')
-        else:
+        if os.path.isdir(path):
             fd = sys.stdin
+        else:
+            fd = open(path, 'rb')
         while True:
             d = fd.read(app.config['UPLOAD_CHUNK_SIZE'])
             if d == '':
@@ -48,5 +58,5 @@ def upload(path=None, name=None):
             db.session.commit()
         db.session.add(a)
         db.session.commit()
-        if path is not None:
+        if not os.path.isdir(path):
             fd.close()

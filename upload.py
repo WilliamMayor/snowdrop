@@ -2,4 +2,4 @@ import sys
 
 from snowdrop import glacier
 
-glacier.upload(name=sys.argv[1])
+glacier.upload(sys.argv[1])
