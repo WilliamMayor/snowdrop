@@ -14,10 +14,12 @@ LAYER2 = Layer2(
     region_name=app.config['AWS_REGION_NAME'])
 
 
-def upload(path=None):
+def upload(path=None, name=None):
     with app.app_context():
+        if name is None:
+            name = os.path.basename(path)
         a = Archive()
-        a.name = '%s - %s' % (datetime.date.today(), os.path.basename(path))
+        a.name = '%s - %s' % (datetime.date.today(), name)
         a.size = os.stat(path).st_size
         a.upload_progress = 0
         db.session.add(a)
