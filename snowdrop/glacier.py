@@ -49,6 +49,7 @@ def upload(path):
                 writer.close()
                 a.id = writer.get_archive_id()
                 a.upload_progress = 100
+                a.size = uploaded_size
                 break
             else:
                 writer.write(d)
