@@ -5,20 +5,44 @@ from . import app
 from .models import db, Archive
 
 
+def format_size(bytes):
+    if bytes < 1024:
+        return '%dB' % bytes
+    bytes = bytes / 1024.0
+    if bytes < 1024:
+        return '%.0fKB' % bytes
+    bytes = bytes / 1024.0
+    if bytes < 1024:
+        return '%.0fMB' % bytes
+    bytes = bytes / 1024.0
+    if bytes < 1024:
+        return '%.0fGB' % bytes
+    bytes = bytes / 1024.0
+    if bytes < 1024:
+        return '%.0fTB' % bytes
+    bytes = bytes / 1024.0
+    return '%.0fPB' % bytes
+
+
+def format_cost(bytes):
+    gb = bytes / (1024.0 * 1024 * 1024)
+    cost = app.config['AWS_GLACIER_DOLLAR_PER_GB'] * gb
+    return '$%.2f' % cost
+
+
 def stats():
     try:
         vault_size = db.session.query(func.sum(Archive.size)).first()[0]
-        vault_size = vault_size / (1024 * 1024 * 1024)
-        monthly_cost = app.config['AWS_GLACIER_DOLLAR_PER_GB'] * vault_size
+        monthly_cost = format_cost(vault_size)
         vault = Archive.query.all()
         for a in vault:
-            a.size = a.size / (1024 * 1024 * 1024)
-            a.cost = app.config['AWS_GLACIER_DOLLAR_PER_GB'] * a.size
+            a.cost = format_cost(a.size)
+            a.size = format_size(a.size)
         return {
             'vault': vault,
             'earliest': Archive.query.order_by(Archive.date).first().date,
             'latest': Archive.query.order_by(Archive.date.desc()).first().date,
-            'vault_size': vault_size,
+            'vault_size': format_size(vault_size),
             'monthly_cost': monthly_cost}
     except:
         return {}

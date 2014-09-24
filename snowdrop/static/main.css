@@ -1,17 +1,20 @@
 html, body {
     width: 100%;
     padding: 0;
+    font-family: Helvetica;
+    font-weight: 300;
 }
 header, .main {
     width: 1000px;
     margin: auto;
 }
+header div {
+    display: inline-block;
+    width: 700px;
+}
 header img {
     width: 200px;
     vertical-align: top;
-}
-header div {
-    display: inline-block;
 }
 .main ul {
     list-style-type: none;
@@ -27,8 +30,28 @@ header div {
 }
 .main table {
     width: 100%;
+    border-collapse: collapse;
 }
-.main table .progress_bar {
+.main table .heading {
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+}
+.main table .heading th {
+    padding: 6px 0 5px 0;
+    text-align: left;
+}
+.main table .archive td {
+    padding-top: 5px;
+}
+.main table tr:nth-child(2) td {
+    padding-top: 10px;
+}
+.main table .progress {
+    border-bottom: 1px solid #eee;
+    padding: 0;
+}
+.main table .progress .bar {
     background-color: blue;
-    height: 2px;
+    height: 1px;
+    margin-bottom: -1px;
 }
