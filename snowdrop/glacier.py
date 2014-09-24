@@ -1,3 +1,4 @@
+import sys
 import datetime
 import os
 
@@ -13,7 +14,7 @@ LAYER2 = Layer2(
     region_name=app.config['AWS_REGION_NAME'])
 
 
-def upload(path):
+def upload(path=None):
     with app.app_context():
         a = Archive()
         a.name = '%s - %s' % (datetime.date.today(), os.path.basename(path))
@@ -26,19 +27,24 @@ def upload(path):
         writer = v.create_archive_writer(
             part_size=app.config['UPLOAD_CHUNK_SIZE'], description=a.name)
         uploaded_size = 0
-        with open(path, 'rb') as fd:
-            while True:
-                d = fd.read(app.config['UPLOAD_CHUNK_SIZE'])
-                if d == '':
-                    writer.close()
-                    a.id = writer.get_archive_id()
-                    a.upload_progress = 100
-                    break
-                else:
-                    writer.write(d)
-                    uploaded_size += len(d)
-                    a.upload_progress = int(100 * uploaded_size / a.size)
-                db.session.add(a)
-                db.session.commit()
+        if path is not None:
+            fd = open(path, 'rb')
+        else:
+            fd = sys.stdin
+        while True:
+            d = fd.read(app.config['UPLOAD_CHUNK_SIZE'])
+            if d == '':
+                writer.close()
+                a.id = writer.get_archive_id()
+                a.upload_progress = 100
+                break
+            else:
+                writer.write(d)
+                uploaded_size += len(d)
+                a.upload_progress = int(100 * uploaded_size / a.size)
             db.session.add(a)
             db.session.commit()
+        db.session.add(a)
+        db.session.commit()
+        if path is not None:
+            fd.close()
