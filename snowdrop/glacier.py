@@ -40,6 +40,5 @@ def upload(path):
                     a.upload_progress = int(100 * uploaded_size / a.size)
                 db.session.add(a)
                 db.session.commit()
-                raw_input('next?')
             db.session.add(a)
             db.session.commit()
