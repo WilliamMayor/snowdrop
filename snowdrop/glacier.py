@@ -61,3 +61,16 @@ def upload(path):
         db.session.commit()
         if not os.path.isdir(path):
             fd.close()
+
+
+def delete(aid):
+    a = Archive.query.filter_by(id=aid).first()
+    if a is not None:
+        try:
+            v = LAYER2.get_vault(app.config['AWS_TARGET_VAULT_NAME'])
+            v.delete_archive(aid)
+        except:
+            pass
+        finally:
+            db.session.delete(a)
+            db.session.commit()

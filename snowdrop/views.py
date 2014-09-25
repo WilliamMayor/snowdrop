@@ -1,7 +1,7 @@
-from flask import render_template
+from flask import render_template, request, jsonify
 from sqlalchemy.sql import func
 
-from . import app
+from . import app, glacier
 from .models import db, Archive
 
 
@@ -51,3 +51,10 @@ def stats():
 @app.route('/')
 def home():
     return render_template('home.html', **stats())
+
+
+@app.route('/delete/', methods=['POST'])
+def delete():
+    for aid in request.get_json().get('aids', []):
+        glacier.delete(aid)
+    return jsonify(message='OK')

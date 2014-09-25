@@ -21,10 +21,10 @@
             <li><span>Monthly cost:</span>{{ monthly_cost }}</li>
         </ul>
         <table>
-            <tr class="heading"><th><input type="checkbox" /></th><th>Date</th><th>Name</th><th>Size</th><th>Cost Per Month</th></tr>
+            <tr class="heading"><th><input class="checkall" type="checkbox" /></th><th>Date</th><th>Name</th><th>Size</th><th>Cost Per Month</th></tr>
             {% for archive in vault %}
             <tr class="archive" data-aid="{{ archive.id }}">
-                <td><input type="checkbox" /></td>
+                <td class="check"><input type="checkbox" /></td>
                 <td>{{ archive.date }}</td>
                 <td>{{ archive.name }}</td>
                 <td>{{ archive.size }}</td>
@@ -41,5 +41,7 @@
             <li><a href="#delete" class="delete">delete</a></li>
         </ul>
     </div>
+    <script type="text/javascript" src="/static/jquery.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
 </body>
 </html>
